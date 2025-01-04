@@ -32,15 +32,9 @@ const HomeScreen = ({ navigation }) => {
       <Text style={{ fontSize: 24, fontWeight: "bold" }}>Select Degree</Text>
 
       {/* Buttons for selecting Degree */}
-      <Button
-        title="Degree 1"
-        onPress={() => handleSelectCategory("Degree 1")}
-      />
+      <Button title="CSE" onPress={() => handleSelectCategory("CSE")} />
       <Button title="DSAI" onPress={() => handleSelectCategory("DSAI")} />
-      <Button
-        title="Degree 3"
-        onPress={() => handleSelectCategory("Degree 3")}
-      />
+      <Button title="ECE" onPress={() => handleSelectCategory("ECE")} />
 
       {/* Display the selected degree */}
       {degree && (

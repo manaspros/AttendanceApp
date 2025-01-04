@@ -20,8 +20,8 @@ const AttendanceScreen = ({ navigation }) => {
   const [attendance, setAttendance] = useState({});
   const [markedDates, setMarkedDates] = useState({});
 
-  const startDate = "2025-01-02";
-  const endDate = "2025-05-21";
+  const defaultStartDate = "2025-01-02";
+  const defaultEndDate = "2025-05-21";
 
   const getDayOfWeek = (dateString) => {
     const days = [
@@ -46,13 +46,21 @@ const AttendanceScreen = ({ navigation }) => {
     loadAttendance();
   }, []);
 
+  const getCourseDates = (course) => {
+    const courseData = courseSchedules[course] || {};
+    const endDate = courseData.endDate || defaultEndDate;
+    const startDate = courseData.startDate || defaultEndDate; // Get custom endDate if exists
+    return {
+      start: new Date(startDate), // Use the course-specific start date
+      end: new Date(endDate),
+    };
+  };
+
   const markScheduledDates = (attendanceData) => {
     const newMarkedDates = {};
     const schedule = courseSchedules[course] || {};
     const holidays = courseHolidays[course] || []; // Get holidays for the course
-
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    const { start, end } = getCourseDates(course);
 
     for (
       let currentDate = new Date(start);
@@ -63,7 +71,6 @@ const AttendanceScreen = ({ navigation }) => {
       const dayOfWeek = getDayOfWeek(dateString);
 
       if (holidays.includes(dateString)) {
-        // If it's a holiday, mark it as gray
         newMarkedDates[dateString] = {
           customStyles: {
             container: {
@@ -156,18 +163,35 @@ const AttendanceScreen = ({ navigation }) => {
   };
 
   const handleResetAttendance = async () => {
-    const updatedAttendance = { ...attendance };
-    for (const date in updatedAttendance) {
-      if (updatedAttendance[date]?.[course]) {
-        delete updatedAttendance[date][course];
-      }
-    }
+    Alert.alert(
+      "Reset Attendance",
+      "Are you sure you want to reset the attendance for this course?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Reset cancelled"),
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            const updatedAttendance = { ...attendance };
+            for (const date in updatedAttendance) {
+              if (updatedAttendance[date]?.[course]) {
+                delete updatedAttendance[date][course];
+              }
+            }
 
-    setAttendance(updatedAttendance);
-    await saveData("attendance", updatedAttendance);
-    markScheduledDates(updatedAttendance);
+            setAttendance(updatedAttendance);
+            await saveData("attendance", updatedAttendance);
+            markScheduledDates(updatedAttendance);
 
-    Alert.alert("Attendance reset for the course.");
+            Alert.alert("Attendance reset for the course.");
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const presentCount = Object.keys(attendance).reduce((acc, date) => {
@@ -192,8 +216,7 @@ const AttendanceScreen = ({ navigation }) => {
 
   const totalClasses = Object.entries(courseSchedules[course] || {}).reduce(
     (acc, [dayOfWeek, classes]) => {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
+      const { start, end } = getCourseDates(course);
       let count = 0;
 
       for (
@@ -220,26 +243,6 @@ const AttendanceScreen = ({ navigation }) => {
     0
   );
 
-  const totalScheduledClasses = Object.entries(
-    courseSchedules[course] || {}
-  ).reduce((acc, [dayOfWeek, classes]) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    let count = 0;
-
-    for (
-      let currentDate = new Date(start);
-      currentDate <= end;
-      currentDate.setDate(currentDate.getDate() + 1)
-    ) {
-      if (getDayOfWeek(currentDate.toISOString().split("T")[0]) === dayOfWeek) {
-        count += classes;
-      }
-    }
-
-    return acc + count;
-  }, 0);
-
   const minRequiredClasses = Math.ceil(totalClasses * 0.75);
   const allowableAbsences = totalClasses - minRequiredClasses - absentCount;
   const currentAttendancePercentage = (presentCount / totalClasses) * 100;
@@ -256,8 +259,8 @@ const AttendanceScreen = ({ navigation }) => {
           ...markedDates,
         }}
         markingType="custom"
-        minDate={startDate}
-        maxDate={endDate}
+        minDate={getCourseDates(course).start.toISOString().split("T")[0]}
+        maxDate={getCourseDates(course).end.toISOString().split("T")[0]} // Set maxDate for the specific course
       />
 
       <View style={styles.buttonContainer}>

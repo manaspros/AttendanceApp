@@ -9,18 +9,42 @@ export const CourseProvider = ({ children }) => {
   const [selectedCourses, setSelectedCourses] = useState([]);
 
   const coursesByCategory = {
-    "Degree 1": ["Course 1A", "Course 1B", "Course 1C"],
+    CSE: [
+      "Introduction to IoT(CSE)",
+      "Design &Prototyping(CSE)",
+      "3D Printing(CSE)",
+      "Introduction to AI and ML(CSE)",
+      "Communication and Discourse Strategies(CSE)",
+      "Calculas(CSE)",
+      "Quantam Mechanics(CSE)",
+      "Signal and System(CSE) 1st Half",
+      "Optimization Techniques(CSE) 1st Half",
+      "Object Oriented Programming(CSE) 2nd Half",
+    ],
     DSAI: [
       "Introduction to IoT",
       "Design &Prototyping",
       "3D Printing",
       "Introduction to AI and ML",
-      "Management of Wealth and Well Being",
       "Communication and Discourse Strategies",
       "Calculas",
       "Quantam Mechanics",
+      "Signal and System 1st Half",
+      "Optimization Techniques 1st Half",
+      "Object Oriented Programming 2nd Half",
     ],
-    "Degree 3": ["Course 3A", "Course 3B", "Course 3C"],
+    ECE: [
+      "Introduction to IoT(ECE)",
+      "Design &Prototyping(ECE)",
+      "3D Printing(ECE)",
+      "Introduction to AI and ML(ECE)",
+      "Communication and Discourse Strategies(ECE)",
+      "Calculas(ECE)",
+      "Quantam Mechanics(ECE)",
+      "Signal and System(ECE) 1st Half",
+      "Optimization Techniques(ECE) 1st Half",
+      "Object Oriented Programming(ECE) 2nd Half",
+    ],
   };
 
   const selectCategory = (category) => {

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+} from "react-native";
 import { useCourseContext } from "../store/context/course-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getData } from "../utils/storage"; // Import AsyncStorage utilities
@@ -70,11 +77,14 @@ const MarkAttendanceScreen = ({ navigation }) => {
 
     const newPercentages = {};
     selectedCourses.forEach((course) => {
-      newPercentages[course] = calculateAttendancePercentage(
-        course,
-        startDate,
-        endDate
-      );
+      if (courseSchedules[course]) {
+        // Only calculate attendance for courses with schedules
+        newPercentages[course] = calculateAttendancePercentage(
+          course,
+          startDate,
+          endDate
+        );
+      }
     });
     setAttendancePercentages(newPercentages);
   };
@@ -89,6 +99,11 @@ const MarkAttendanceScreen = ({ navigation }) => {
       if (selectedDate) setEndDate(selectedDate);
     }
   };
+
+  // Filter scorable courses (those with available schedules)
+  const scorableCourses = selectedCourses.filter(
+    (course) => courseSchedules[course]
+  );
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
@@ -135,30 +150,32 @@ const MarkAttendanceScreen = ({ navigation }) => {
         onPress={updateAttendancePercentages}
       />
 
-      {/* Display Courses */}
-      {selectedCourses.length > 0 ? (
-        selectedCourses.map((course, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => navigation.navigate("Attendance", { course })}
-            style={{
-              backgroundColor: "#f0f0f0",
-              padding: 15,
-              marginVertical: 5,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ fontSize: 18 }}>{course}</Text>
-            <Text style={{ fontSize: 16, color: "gray" }}>
-              Attendance: {attendancePercentages[course] || 0}%
-            </Text>
-          </TouchableOpacity>
-        ))
-      ) : (
-        <Text style={{ fontSize: 18, marginVertical: 20 }}>
-          No courses selected.
-        </Text>
-      )}
+      {/* Display Scorable Courses */}
+      <ScrollView style={{ marginTop: 20 }}>
+        {scorableCourses.length > 0 ? (
+          scorableCourses.map((course, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => navigation.navigate("Attendance", { course })}
+              style={{
+                backgroundColor: "#f0f0f0",
+                padding: 15,
+                marginVertical: 5,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ fontSize: 18 }}>{course}</Text>
+              <Text style={{ fontSize: 16, color: "gray" }}>
+                Attendance: {attendancePercentages[course] || 0}%
+              </Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={{ fontSize: 18, marginVertical: 20 }}>
+            No scorable courses available.
+          </Text>
+        )}
+      </ScrollView>
     </View>
   );
 };
