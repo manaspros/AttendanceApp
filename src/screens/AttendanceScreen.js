@@ -267,18 +267,24 @@ const AttendanceScreen = ({ navigation }) => {
         maxDate={getCourseDates(course).end.toISOString().split("T")[0]} // Set maxDate for the specific course
       />
 
-      <View style={styles.buttonContainers}>
-        <Button
-          title="Present for Class"
-          onPress={() => handleMarkAllClasses("Present")}
-        />
-      </View>
-      <View style={styles.buttonContainers}>
-        <Button
-          title="Absent for Class"
-          onPress={() => handleMarkAllClasses("Absent")}
-        />
-      </View>
+      {selectedDate && ( // Conditionally render buttons only if a date is selected
+        <>
+          <View style={styles.floatingButtons}>
+            <TouchableOpacity
+              style={styles.presentButton}
+              onPress={() => handleMarkAllClasses("Present")}
+            >
+              <Text style={styles.buttonText}>Present for Class</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.absentButton}
+              onPress={() => handleMarkAllClasses("Absent")}
+            >
+              <Text style={styles.buttonText}>Absent for Class</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
 
       <View style={styles.buttonContainer}>
         <Button
@@ -308,6 +314,35 @@ const AttendanceScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  floatingButtons: {
+    position: "absolute",
+    bottom: 30,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    paddingHorizontal: 20,
+  },
+  presentButton: {
+    flex: 1,
+    marginHorizontal: 10,
+    backgroundColor: "green",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  absentButton: {
+    flex: 1,
+    marginHorizontal: 10,
+    backgroundColor: "red",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   container: {
     flex: 1,
     padding: 20,
