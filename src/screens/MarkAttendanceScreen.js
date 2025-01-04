@@ -8,8 +8,9 @@ import courseSchedules from "../store/course-schedule"; // Import course schedul
 const MarkAttendanceScreen = ({ navigation }) => {
   const { selectedCourses } = useCourseContext();
   const [attendance, setAttendance] = useState({});
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  // Set default start date (2nd January) and end date (20th May)
+  const [startDate, setStartDate] = useState(new Date(2024, 0, 2)); // Default 2nd Jan
+  const [endDate, setEndDate] = useState(new Date(2024, 4, 20)); // Default 20th May
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [attendancePercentages, setAttendancePercentages] = useState({});
@@ -42,20 +43,21 @@ const MarkAttendanceScreen = ({ navigation }) => {
         weekday: "long",
       });
 
+      // Check if there are scheduled classes on the current day
       if (schedule[dayOfWeek]) {
-        totalScheduledClasses += schedule[dayOfWeek];
+        totalScheduledClasses += schedule[dayOfWeek]; // Add the scheduled classes for this day
         const attendanceForDate = attendance[dateString]?.[course] || {};
         const presentCount = Object.values(attendanceForDate).filter(
           (status) => status === "Present"
         ).length;
-        totalPresentClasses += presentCount;
+        totalPresentClasses += presentCount; // Count the "Present" status
       }
 
-      currentDate.setDate(currentDate.getDate() + 1);
+      currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
     }
 
     return totalScheduledClasses > 0
-      ? ((totalPresentClasses / totalScheduledClasses) * 100).toFixed(2)
+      ? ((totalPresentClasses / totalScheduledClasses) * 100).toFixed(2) // Calculate attendance percentage
       : 0;
   };
 
