@@ -41,15 +41,18 @@ const AttendanceScreen = ({ navigation }) => {
     const loadAttendance = async () => {
       const storedAttendance = await getData("attendance");
       setAttendance(storedAttendance || {});
-      markScheduledDates(storedAttendance || {});
     };
     loadAttendance();
   }, []);
 
+  useEffect(() => {
+    markScheduledDates(attendance);
+  }, [attendance]); // Add dependency on `attendance` to reload marked dates when attendance changes
+
   const getCourseDates = (course) => {
     const courseData = courseSchedules[course] || {};
     const endDate = courseData.endDate || defaultEndDate;
-    const startDate = courseData.startDate || defaultEndDate; // Get custom endDate if exists
+    const startDate = courseData.startDate || defaultStartDate; // Get custom endDate if exists
     return {
       start: new Date(startDate), // Use the course-specific start date
       end: new Date(endDate),
@@ -245,7 +248,8 @@ const AttendanceScreen = ({ navigation }) => {
 
   const minRequiredClasses = Math.ceil(totalClasses * 0.75);
   const allowableAbsences = totalClasses - minRequiredClasses - absentCount;
-  const currentAttendancePercentage = (presentCount / totalClasses) * 100;
+  const currentAttendancePercentage =
+    ((totalClasses - absentCount) / totalClasses) * 100;
 
   return (
     <View style={styles.container}>
@@ -263,13 +267,15 @@ const AttendanceScreen = ({ navigation }) => {
         maxDate={getCourseDates(course).end.toISOString().split("T")[0]} // Set maxDate for the specific course
       />
 
-      <View style={styles.buttonContainer}>
+      <View style={styles.buttonContainers}>
         <Button
-          title="Present for All Classes"
+          title="Present for Class"
           onPress={() => handleMarkAllClasses("Present")}
         />
+      </View>
+      <View style={styles.buttonContainers}>
         <Button
-          title="Absent for All Classes"
+          title="Absent for Class"
           onPress={() => handleMarkAllClasses("Absent")}
         />
       </View>
@@ -281,13 +287,6 @@ const AttendanceScreen = ({ navigation }) => {
           color="red"
         />
       </View>
-
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.backButton}
-      >
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
 
       <View>
         <Text>
@@ -325,6 +324,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginVertical: 20,
+  },
+  buttonContainers: {
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+    marginVertical: 5,
   },
   backButton: {
     position: "absolute",

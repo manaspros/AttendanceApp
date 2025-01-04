@@ -4,30 +4,46 @@
   "main": "index.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "android": "DARK_MODE=media expo start --android",
+    "ios": "DARK_MODE=media expo start --ios",
+    "web": "DARK_MODE=media expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/advent-pro": "^0.2.3",
+    "@expo-google-fonts/inter": "^0.2.3",
+    "@gluestack-ui/button": "^1.0.8",
+    "@gluestack-ui/icon": "^0.1.25",
+    "@gluestack-ui/nativewind-utils": "^1.0.26",
+    "@gluestack-ui/overlay": "^0.1.16",
+    "@gluestack-ui/toast": "^1.0.8",
     "@react-native-async-storage/async-storage": "^1.24.0",
     "@react-native-community/datetimepicker": "^8.2.0",
     "@react-navigation/elements": "^2.2.5",
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/native-stack": "^7.2.0",
     "@react-navigation/stack": "^7.1.1",
+    "babel-plugin-module-resolver": "^5.0.2",
     "expo": "~52.0.23",
+    "expo-font": "~13.0.2",
     "expo-status-bar": "~2.0.0",
+    "nativewind": "^4.1.23",
     "react": "18.3.1",
     "react-native": "0.76.5",
     "react-native-calendars": "^1.1307.0",
+    "react-native-css-interop": "^0.1.22",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-get-random-values": "^1.11.0",
     "react-native-reanimated": "^3.16.6",
     "react-native-safe-area-context": "^5.0.0",
-    "react-native-screens": "^4.4.0"
+    "react-native-screens": "^4.4.0",
+    "react-native-svg": "^15.2.0",
+    "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2"
+    "@babel/core": "^7.25.2",
+    "@types/react": "~18.3.12",
+    "jscodeshift": "^0.15.2",
+    "typescript": "^5.3.3"
   },
   "private": true
 }

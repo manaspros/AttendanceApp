@@ -1,28 +1,20 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Button,
-  TouchableOpacity,
-  Alert,
-  ScrollView,
-} from "react-native";
+import { View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { useCourseContext } from "../store/context/course-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getData } from "../utils/storage"; // Import AsyncStorage utilities
 import courseSchedules from "../store/course-schedule"; // Import course schedules
+import { Button, ButtonText } from "../../components/ui/button";
 
 const MarkAttendanceScreen = ({ navigation }) => {
   const { selectedCourses } = useCourseContext();
   const [attendance, setAttendance] = useState({});
-  // Set default start date (2nd January) and end date (20th May)
   const [startDate, setStartDate] = useState(new Date(2024, 0, 2)); // Default 2nd Jan
   const [endDate, setEndDate] = useState(new Date(2024, 4, 20)); // Default 20th May
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [attendancePercentages, setAttendancePercentages] = useState({});
 
-  // Load attendance data on component mount
   useEffect(() => {
     const loadAttendance = async () => {
       const storedAttendance = await getData("attendance");
@@ -39,7 +31,7 @@ const MarkAttendanceScreen = ({ navigation }) => {
     if (!schedule) return 0;
 
     let totalScheduledClasses = 0;
-    let totalPresentClasses = 0;
+    let totalAbsentClasses = 0; // Track absences
 
     const currentDate = new Date(startDate);
     const end = new Date(endDate);
@@ -53,16 +45,18 @@ const MarkAttendanceScreen = ({ navigation }) => {
       // Check if there are scheduled classes on the current day
       if (schedule[dayOfWeek]) {
         totalScheduledClasses += schedule[dayOfWeek]; // Add the scheduled classes for this day
-        const attendanceForDate = attendance[dateString]?.[course] || {};
-        const presentCount = Object.values(attendanceForDate).filter(
-          (status) => status === "Present"
-        ).length;
-        totalPresentClasses += presentCount; // Count the "Present" status
+
+        // Get attendance for the current day and course
+        const attendanceForDate = attendance[dateString]?.[course] || null;
+        if (attendanceForDate === "Absent") {
+          totalAbsentClasses += 1; // Increment absent count
+        }
       }
 
       currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
     }
 
+    const totalPresentClasses = totalScheduledClasses - totalAbsentClasses; // Calculate the present classes
     return totalScheduledClasses > 0
       ? ((totalPresentClasses / totalScheduledClasses) * 100).toFixed(2) // Calculate attendance percentage
       : 0;
@@ -110,13 +104,18 @@ const MarkAttendanceScreen = ({ navigation }) => {
       <Text style={{ fontSize: 24, fontWeight: "bold" }}>Courses</Text>
 
       {/* Date Pickers */}
-      <View style={{ marginVertical: 10 }}>
+      {/* <View style={{ marginVertical: 10 }}>
         <Button
-          title={`Select Start Date: ${
-            startDate ? startDate.toDateString() : "Not Selected"
-          }`}
+          size="lg"
+          variant="solid"
+          action="primary"
           onPress={() => setShowStartPicker(true)}
-        />
+        >
+          <ButtonText>
+            Select Start Date:{" "}
+            {startDate ? startDate.toDateString() : "Not Selected"}
+          </ButtonText>
+        </Button>
         {showStartPicker && (
           <DateTimePicker
             value={startDate || new Date()}
@@ -128,11 +127,15 @@ const MarkAttendanceScreen = ({ navigation }) => {
           />
         )}
         <Button
-          title={`Select End Date: ${
-            endDate ? endDate.toDateString() : "Not Selected"
-          }`}
+          size="lg"
+          variant="solid"
+          action="primary"
           onPress={() => setShowEndPicker(true)}
-        />
+        >
+          <ButtonText>
+            Select End Date: {endDate ? endDate.toDateString() : "Not Selected"}
+          </ButtonText>
+        </Button>
         {showEndPicker && (
           <DateTimePicker
             value={endDate || new Date()}
@@ -146,9 +149,13 @@ const MarkAttendanceScreen = ({ navigation }) => {
       </View>
 
       <Button
-        title="Calculate Attendance"
+        size="lg"
+        variant="outline"
+        action="primary"
         onPress={updateAttendancePercentages}
-      />
+      >
+        <ButtonText>Update Attendance Percentages</ButtonText>
+      </Button> */}
 
       {/* Display Scorable Courses */}
       <ScrollView style={{ marginTop: 20 }}>
@@ -165,9 +172,6 @@ const MarkAttendanceScreen = ({ navigation }) => {
               }}
             >
               <Text style={{ fontSize: 18 }}>{course}</Text>
-              <Text style={{ fontSize: 16, color: "gray" }}>
-                Attendance: {attendancePercentages[course] || 0}%
-              </Text>
             </TouchableOpacity>
           ))
         ) : (
