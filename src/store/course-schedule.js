@@ -6,7 +6,7 @@ const courseSchedules = {
     endDate: "2025-05-21",
   },
   "Design &Prototyping": {
-    startDate: "2025-01-03",
+    startDate: "2025-01-02",
     Wednesday: 1,
     Thursday: 2,
     endDate: "2025-05-21",

@@ -1,182 +1,78 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useCourseContext } from "../store/context/course-context";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { getData } from "../utils/storage"; // Import AsyncStorage utilities
-import courseSchedules from "../store/course-schedule"; // Import course schedules
-import { Button, ButtonText } from "../../components/ui/button";
+import { getData } from "../utils/storage"; // assuming getData fetches from storage
 
 const MarkAttendanceScreen = ({ navigation }) => {
   const { selectedCourses } = useCourseContext();
-  const [attendance, setAttendance] = useState({});
-  const [startDate, setStartDate] = useState(new Date(2024, 0, 2)); // Default 2nd Jan
-  const [endDate, setEndDate] = useState(new Date(2024, 4, 20)); // Default 20th May
-  const [showStartPicker, setShowStartPicker] = useState(false);
-  const [showEndPicker, setShowEndPicker] = useState(false);
-  const [attendancePercentages, setAttendancePercentages] = useState({});
+  const [attendance, setAttendance] = useState({}); // Store attendance data
 
+  // Load attendance data on component mount
   useEffect(() => {
     const loadAttendance = async () => {
-      const storedAttendance = await getData("attendance");
-      setAttendance(storedAttendance || {});
+      const storedAttendance = await getData("attendance"); // Fetch the latest attendance from storage
+
+      if (storedAttendance) {
+        // Update the attendance data from storage for each course
+        const updatedAttendance = selectedCourses.reduce((acc, course) => {
+          // Check if attendance for the course exists, otherwise set it as empty or default
+          acc[course] = storedAttendance[course] || {
+            attendancePercentage: "N/A",
+          };
+          return acc;
+        }, {});
+
+        // Set the state with updated attendance data
+        setAttendance(updatedAttendance);
+      } else {
+        // If no attendance data is found in storage, initialize with "N/A" for each selected course
+        const initialAttendance = selectedCourses.reduce((acc, course) => {
+          acc[course] = { attendancePercentage: "100.00" }; // Default to 100.00%
+          return acc;
+        }, {});
+        setAttendance(initialAttendance);
+      }
     };
+
     loadAttendance();
-  }, []);
-
-  // Calculate attendance percentage for a specific course
-  const calculateAttendancePercentage = (course, startDate, endDate) => {
-    if (!startDate || !endDate) return 0;
-
-    const schedule = courseSchedules[course];
-    if (!schedule) return 0;
-
-    let totalScheduledClasses = 0;
-    let totalAbsentClasses = 0; // Track absences
-
-    const currentDate = new Date(startDate);
-    const end = new Date(endDate);
-
-    while (currentDate <= end) {
-      const dateString = currentDate.toISOString().split("T")[0];
-      const dayOfWeek = currentDate.toLocaleDateString("en-US", {
-        weekday: "long",
-      });
-
-      // Check if there are scheduled classes on the current day
-      if (schedule[dayOfWeek]) {
-        totalScheduledClasses += schedule[dayOfWeek]; // Add the scheduled classes for this day
-
-        // Get attendance for the current day and course
-        const attendanceForDate = attendance[dateString]?.[course] || null;
-        if (attendanceForDate === "Absent") {
-          totalAbsentClasses += 1; // Increment absent count
-        }
-      }
-
-      currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-    }
-
-    const totalPresentClasses = totalScheduledClasses - totalAbsentClasses; // Calculate the present classes
-    return totalScheduledClasses > 0
-      ? ((totalPresentClasses / totalScheduledClasses) * 100).toFixed(2) // Calculate attendance percentage
-      : 0;
-  };
-
-  // Update percentages for all courses
-  const updateAttendancePercentages = () => {
-    if (!startDate || !endDate) {
-      Alert.alert("Please select both start and end dates.");
-      return;
-    }
-
-    const newPercentages = {};
-    selectedCourses.forEach((course) => {
-      if (courseSchedules[course]) {
-        // Only calculate attendance for courses with schedules
-        newPercentages[course] = calculateAttendancePercentage(
-          course,
-          startDate,
-          endDate
-        );
-      }
-    });
-    setAttendancePercentages(newPercentages);
-  };
-
-  // Handle date selection
-  const handleDateChange = (event, selectedDate, isStart) => {
-    if (isStart) {
-      setShowStartPicker(false);
-      if (selectedDate) setStartDate(selectedDate);
-    } else {
-      setShowEndPicker(false);
-      if (selectedDate) setEndDate(selectedDate);
-    }
-  };
-
-  // Filter scorable courses (those with available schedules)
-  const scorableCourses = selectedCourses.filter(
-    (course) => courseSchedules[course]
-  );
+  }, [selectedCourses]); // Reloads whenever selectedCourses change
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
       <Text style={{ fontSize: 24, fontWeight: "bold" }}>Courses</Text>
-
-      {/* Date Pickers */}
-      {/* <View style={{ marginVertical: 10 }}>
-        <Button
-          size="lg"
-          variant="solid"
-          action="primary"
-          onPress={() => setShowStartPicker(true)}
-        >
-          <ButtonText>
-            Select Start Date:{" "}
-            {startDate ? startDate.toDateString() : "Not Selected"}
-          </ButtonText>
-        </Button>
-        {showStartPicker && (
-          <DateTimePicker
-            value={startDate || new Date()}
-            mode="date"
-            display="default"
-            onChange={(event, selectedDate) =>
-              handleDateChange(event, selectedDate, true)
-            }
-          />
-        )}
-        <Button
-          size="lg"
-          variant="solid"
-          action="primary"
-          onPress={() => setShowEndPicker(true)}
-        >
-          <ButtonText>
-            Select End Date: {endDate ? endDate.toDateString() : "Not Selected"}
-          </ButtonText>
-        </Button>
-        {showEndPicker && (
-          <DateTimePicker
-            value={endDate || new Date()}
-            mode="date"
-            display="default"
-            onChange={(event, selectedDate) =>
-              handleDateChange(event, selectedDate, false)
-            }
-          />
-        )}
-      </View>
-
-      <Button
-        size="lg"
-        variant="outline"
-        action="primary"
-        onPress={updateAttendancePercentages}
-      >
-        <ButtonText>Update Attendance Percentages</ButtonText>
-      </Button> */}
-
-      {/* Display Scorable Courses */}
       <ScrollView style={{ marginTop: 20 }}>
-        {scorableCourses.length > 0 ? (
-          scorableCourses.map((course, index) => (
+        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10 }}>
+          Attendance Percentages
+        </Text>
+        {selectedCourses.length > 0 ? (
+          selectedCourses.map((course, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => navigation.navigate("Attendance", { course })}
+              onPress={
+                () => navigation.navigate("Attendance", { course }) // Navigate to a detailed page
+              }
               style={{
-                backgroundColor: "#f0f0f0",
+                backgroundColor: "#e6f7ff",
                 padding: 15,
                 marginVertical: 5,
                 borderRadius: 5,
               }}
             >
-              <Text style={{ fontSize: 18 }}>{course}</Text>
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>{course}</Text>
+              <Text style={{ fontSize: 16 }}>
+                Attendance Percentage:{" "}
+                {attendance[course]?.attendancePercentage
+                  ? `${parseFloat(
+                      attendance[course]?.attendancePercentage
+                    ).toFixed(2)}%`
+                  : "100.00%"}{" "}
+                {/* Show "N/A" if no data available */}
+              </Text>
             </TouchableOpacity>
           ))
         ) : (
           <Text style={{ fontSize: 18, marginVertical: 20 }}>
-            No scorable courses available.
+            No selected courses available.
           </Text>
         )}
       </ScrollView>
