@@ -379,14 +379,29 @@ const AttendanceScreen = ({ navigation }) => {
         <Calendar
           onDayPress={(day) => handleDateSelect(day)}
           markedDates={{
-            [selectedDate]: { selected: true, selectedColor: "blue" },
+            [selectedDate]: {
+              selected: true,
+              selectedColor: "#4e54c8",
+              selectedTextColor: "white",
+            },
             ...markedDates,
           }}
           markingType="custom"
           minDate={getCourseDates(course).start.toISOString().split("T")[0]}
           maxDate={getCourseDates(course).end.toISOString().split("T")[0]}
+          theme={{
+            selectedDayBackgroundColor: "#4e54c8",
+            selectedDayTextColor: "white",
+            todayTextColor: "#4e54c8",
+            arrowColor: "#4e54c8", // Color of the month navigation arrows
+            dayTextColor: "#333", // Default day text color
+            monthTextColor: "#4e54c8", // Month text color
+            textMonthFontWeight: "bold", // Bold month text
+            textDayFontWeight: "600", // Bold day text
+            textDayHeaderFontWeight: "bold", // Bold day header (e.g., Mon, Tue)
+            textDayFontSize: 16, // Larger font size for day text
+          }}
         />
-
         <View style={styles.legendContainer}>
           <Text style={styles.legendItem}>
             <View style={styles.oneClass} /> 1 Class
@@ -460,19 +475,25 @@ const AttendanceScreen = ({ navigation }) => {
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: "#f9f9f9", // Lighter background for better contrast
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    overflow: "hidden",
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
+    color: "#333", // Dark text for readability
+    marginBottom: 10,
   },
   subtitle: {
     fontSize: 18,
-    marginVertical: 20,
+    color: "#777", // Softer color for subtitles
+    marginBottom: 20,
   },
   legendContainer: {
     position: "absolute",
@@ -521,29 +542,61 @@ const styles = StyleSheet.create({
   floatingButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 0,
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
   presentButton: {
-    backgroundColor: "#32cd32",
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: "#32cd32", // Green for present
+    paddingVertical: 12,
+    borderRadius: 12,
     flex: 1,
     marginRight: 10,
     alignItems: "center",
+    elevation: 3, // Slight shadow for depth
   },
   absentButton: {
-    backgroundColor: "red",
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: "red", // Red for absent
+    paddingVertical: 12,
+    borderRadius: 12,
     flex: 1,
     alignItems: "center",
+    elevation: 3, // Slight shadow for depth
   },
   buttonText: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 16,
   },
   buttonContainer: {
+    marginTop: 30,
+    paddingHorizontal: 20,
+  },
+  tableContainer: {
+    borderRadius: 15,
+    backgroundColor: "#ffffff", // White background for the table
+    overflow: "hidden",
+    marginBottom: 40,
+    elevation: 5, // Adding depth to the table
+  },
+  tableRow: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd", // Light border for table rows
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  tableData: {
+    fontSize: 16,
+    color: "#333",
+  },
+  resetButton: {
+    backgroundColor: "#ff6347", // Tomato color for reset
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: "center",
     marginTop: 20,
+    elevation: 3, // Adding depth to the reset button
   },
 });
 

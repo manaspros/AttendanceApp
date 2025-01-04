@@ -12,18 +12,54 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <GluestackUIProvider mode="light"><CourseProvider>
+    <GluestackUIProvider mode="light">
+      <CourseProvider>
         <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: "#6C63FF", // Vibrant purple background for the navbar
+              },
+              headerTintColor: "#FFFFFF", // White text color for titles
+              headerTitleStyle: {
+                fontWeight: "bold",
+                fontSize: 20,
+                fontFamily: "AdventPro_700Bold", // Aesthetic font
+              },
+              headerShadowVisible: false, // Removes shadow for a cleaner look
+              headerBackTitleVisible: false, // Hides "Back" text
+              animationDuration: 1000, // Duration of the animation (slower than default)
+              gestureEnabled: true, // Enable gesture navigation for smoother experience
+            }}
+          >
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{
+                title: "Welcome", // Custom title for the Home screen
+                headerTitleAlign: "center", // Center-align the title
+              }}
+            />
             <Stack.Screen
               name="MarkAttendance"
               component={MarkAttendanceScreen}
+              options={{
+                title: "Mark Attendance", // Custom title for the screen
+                headerTitleAlign: "center",
+              }}
             />
-            <Stack.Screen name="Attendance" component={AttendanceScreen} />
+            <Stack.Screen
+              name="Attendance"
+              component={AttendanceScreen}
+              options={{
+                title: "Attendance History",
+                headerTitleAlign: "center",
+              }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
-      </CourseProvider></GluestackUIProvider>
+      </CourseProvider>
+    </GluestackUIProvider>
   );
 };
 

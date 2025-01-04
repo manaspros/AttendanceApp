@@ -1,33 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { useCourseContext } from "../store/context/course-context";
 import { getData } from "../utils/storage"; // assuming getData fetches from storage
+import { MaterialIcons } from "@expo/vector-icons"; // Icon package for better visuals
 
 const MarkAttendanceScreen = ({ navigation }) => {
   const { selectedCourses } = useCourseContext();
-  const [attendance, setAttendance] = useState({}); // Store attendance data
+  const [attendance, setAttendance] = useState({});
 
   // Load attendance data on component mount
   useEffect(() => {
     const loadAttendance = async () => {
-      const storedAttendance = await getData("attendance"); // Fetch the latest attendance from storage
+      const storedAttendance = await getData("attendance");
 
       if (storedAttendance) {
-        // Update the attendance data from storage for each course
         const updatedAttendance = selectedCourses.reduce((acc, course) => {
-          // Check if attendance for the course exists, otherwise set it as empty or default
           acc[course] = storedAttendance[course] || {
             attendancePercentage: "N/A",
           };
           return acc;
         }, {});
-
-        // Set the state with updated attendance data
         setAttendance(updatedAttendance);
       } else {
-        // If no attendance data is found in storage, initialize with "N/A" for each selected course
         const initialAttendance = selectedCourses.reduce((acc, course) => {
-          acc[course] = { attendancePercentage: "100.00" }; // Default to 100.00%
+          acc[course] = { attendancePercentage: "100.00" };
           return acc;
         }, {});
         setAttendance(initialAttendance);
@@ -35,43 +37,39 @@ const MarkAttendanceScreen = ({ navigation }) => {
     };
 
     loadAttendance();
-  }, [selectedCourses]); // Reloads whenever selectedCourses change
+  }, [selectedCourses]);
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 24, fontWeight: "bold" }}>Courses</Text>
-      <ScrollView style={{ marginTop: 20 }}>
-        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10 }}>
-          Attendance Percentages
-        </Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Your Courses</Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false} // Remove scrollbar
+      >
+        <Text style={styles.subtitle}>Attendance Percentages</Text>
         {selectedCourses.length > 0 ? (
           selectedCourses.map((course, index) => (
             <TouchableOpacity
               key={index}
-              onPress={
-                () => navigation.navigate("Attendance", { course }) // Navigate to a detailed page
-              }
-              style={{
-                backgroundColor: "#e6f7ff",
-                padding: 15,
-                marginVertical: 5,
-                borderRadius: 5,
-              }}
+              onPress={() => navigation.navigate("Attendance", { course })}
+              style={styles.card}
             >
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>{course}</Text>
-              <Text style={{ fontSize: 16 }}>
+              <View style={styles.cardHeader}>
+                <MaterialIcons name="book" size={24} color="#4e54c8" />
+                <Text style={styles.courseName}>{course}</Text>
+              </View>
+              <Text style={styles.attendanceText}>
                 Attendance Percentage:{" "}
                 {attendance[course]?.attendancePercentage
                   ? `${parseFloat(
                       attendance[course]?.attendancePercentage
                     ).toFixed(2)}%`
-                  : "100.00%"}{" "}
-                {/* Show "N/A" if no data available */}
+                  : "N/A"}
               </Text>
             </TouchableOpacity>
           ))
         ) : (
-          <Text style={{ fontSize: 18, marginVertical: 20 }}>
+          <Text style={styles.noCoursesText}>
             No selected courses available.
           </Text>
         )}
@@ -79,5 +77,63 @@ const MarkAttendanceScreen = ({ navigation }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#f5f8ff", // Light pastel background (soft blue shade)
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#4e54c8", // Deep blue for contrast
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#333", // Neutral dark for readability
+    marginBottom: 15,
+  },
+  scrollContainer: {
+    paddingBottom: 20,
+  },
+  card: {
+    backgroundColor: "#ffffff", // White for a clean card look
+    padding: 20,
+    borderRadius: 15,
+    marginVertical: 10,
+    borderColor: "#e0e0e0", // Subtle border
+    borderWidth: 1,
+    elevation: 3, // Shadow on Android
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3, // Subtle shadow on iOS
+  },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  courseName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#4e54c8", // Matching accent color
+    marginLeft: 10,
+  },
+  attendanceText: {
+    fontSize: 16,
+    color: "#555", // Neutral gray for details
+  },
+  noCoursesText: {
+    fontSize: 18,
+    color: "#666",
+    marginVertical: 20,
+    textAlign: "center",
+  },
+});
 
 export default MarkAttendanceScreen;
