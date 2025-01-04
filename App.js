@@ -1,20 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import HomeScreen from "./src/screens/HomeScreen";
+import MarkAttendanceScreen from "./src/screens/MarkAttendanceScreen";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { CourseProvider } from "./src/store/context/course-context";
+import AttendanceScreen from "./src/screens/AttendanceScreen";
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <CourseProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            name="MarkAttendance"
+            component={MarkAttendanceScreen}
+          />
+          <Stack.Screen name="Attendance" component={AttendanceScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </CourseProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
