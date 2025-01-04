@@ -36,10 +36,7 @@ const HomeScreen = ({ navigation }) => {
         title="Degree 1"
         onPress={() => handleSelectCategory("Degree 1")}
       />
-      <Button
-        title="Degree 2"
-        onPress={() => handleSelectCategory("Degree 2")}
-      />
+      <Button title="DSAI" onPress={() => handleSelectCategory("DSAI")} />
       <Button
         title="Degree 3"
         onPress={() => handleSelectCategory("Degree 3")}
