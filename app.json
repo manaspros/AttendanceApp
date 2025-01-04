@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "AttendanceApp",
+    "name": "Attendance App",
     "slug": "AttendanceApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,24 +8,31 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.manasnandchoudhary.AttendanceApp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.manasnandchoudhary.AttendanceApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "889282b1-ef98-4916-a0b1-67a848aa0ec7"
+      }
+    }
   }
 }
