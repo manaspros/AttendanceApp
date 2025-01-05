@@ -7,6 +7,7 @@ import MarkAttendanceScreen from "./src/screens/MarkAttendanceScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CourseProvider } from "./src/store/context/course-context";
 import AttendanceScreen from "./src/screens/AttendanceScreen";
+import ViewScheduleScreen from "./src/screens/ViewScheduleScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,14 @@ const App = () => {
               component={MarkAttendanceScreen}
               options={{
                 title: "Mark Attendance", // Custom title for the screen
+                headerTitleAlign: "center",
+              }}
+            />
+            <Stack.Screen
+              name="ViewScheduleScreen"
+              component={ViewScheduleScreen}
+              options={{
+                title: "View Schedule",
                 headerTitleAlign: "center",
               }}
             />

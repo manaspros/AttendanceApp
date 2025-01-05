@@ -11,7 +11,7 @@ import {
 import { Calendar } from "react-native-calendars";
 import { useRoute } from "@react-navigation/native";
 import { saveData, getData } from "../utils/storage";
-import courseSchedules from "../store/course-schedule"; // Import the course schedules
+import courseSchedules from "../store/course-schedule-notime"; // Import the course schedules
 import courseHolidays from "../store/course-holiday"; // Import the course holidays
 import {
   Table,
@@ -164,7 +164,6 @@ const AttendanceScreen = ({ navigation }) => {
       Alert.alert("No classes scheduled or holiday on this day.");
     }
   };
-
   const handleMarkAllClasses = async (status) => {
     if (!selectedDate) {
       Alert.alert("Please select a valid date.");

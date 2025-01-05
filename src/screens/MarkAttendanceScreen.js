@@ -9,6 +9,7 @@ import {
 import { useCourseContext } from "../store/context/course-context";
 import { getData } from "../utils/storage"; // assuming getData fetches from storage
 import { MaterialIcons } from "@expo/vector-icons"; // Icon package for better visuals
+import { Ionicons } from "@expo/vector-icons"; // For the calendar icon
 
 const MarkAttendanceScreen = ({ navigation }) => {
   const { selectedCourses } = useCourseContext();
@@ -74,6 +75,19 @@ const MarkAttendanceScreen = ({ navigation }) => {
           </Text>
         )}
       </ScrollView>
+
+      {/* Calendar Button to navigate to ViewScheduleScreen */}
+      <TouchableOpacity
+        style={styles.calendarButton}
+        onPress={() =>
+          navigation.navigate("ViewScheduleScreen", { selectedCourses })
+        }
+      >
+        <View style={styles.iconContainer}>
+          <Ionicons name="calendar-outline" size={24} color="#fff" />
+          <Text style={styles.calendarText}>View Schedule</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -133,6 +147,26 @@ const styles = StyleSheet.create({
     color: "#666",
     marginVertical: 20,
     textAlign: "center",
+  },
+  calendarButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#4e54c8", // Blue background for the button
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  iconContainer: {
+    flexDirection: "row", // Align icon and text horizontally
+    alignItems: "center",
+  },
+  calendarText: {
+    color: "#fff", // White text
+    fontSize: 18,
+    fontWeight: "bold",
+    marginLeft: 10, // Space between icon and text
   },
 });
 
