@@ -147,10 +147,24 @@ const AttendanceScreen = ({ navigation }) => {
       !courseHolidays[course]?.includes(date.dateString)
     ) {
       setSelectedDate(date.dateString);
+
+      // Mark the selected date as blue
+      setMarkedDates((prev) => ({
+        ...prev,
+        [date.dateString]: {
+          customStyles: {
+            container: {
+              backgroundColor: "blue", // Blue for selected date
+            },
+            text: { color: "white", fontWeight: "bold" },
+          },
+        },
+      }));
     } else {
       Alert.alert("No classes scheduled or holiday on this day.");
     }
   };
+
   const handleMarkAllClasses = async (status) => {
     if (!selectedDate) {
       Alert.alert("Please select a valid date.");
@@ -181,6 +195,18 @@ const AttendanceScreen = ({ navigation }) => {
     for (let i = 1; i <= classesOnDay; i++) {
       currentAttendance[selectedDate][course][`Class ${i}`] = status;
     }
+
+    setMarkedDates((prev) => ({
+      ...prev,
+      [selectedDate]: {
+        customStyles: {
+          container: {
+            backgroundColor: status === "Absent" ? "red" : "green", // Red or Green based on status
+          },
+          text: { color: "white", fontWeight: "bold" },
+        },
+      },
+    }));
 
     // Add last updated date for the course
     const lastUpdated = new Date().toISOString();
@@ -369,7 +395,7 @@ const AttendanceScreen = ({ navigation }) => {
     ((totalClasses - absentCount) / totalClasses) * 100;
 
   return (
-    <ScrollView style={{ marginTop: 20, flex: 1 }}>
+    <ScrollView style={{ marginTop: 0, flex: 1 }}>
       <View style={styles.container}>
         <Text style={styles.title}>Mark Attendance</Text>
         <Text style={styles.subtitle}>
@@ -420,26 +446,41 @@ const AttendanceScreen = ({ navigation }) => {
           </Text>
         </View>
 
-        <View style={{ flex: 1, marginBottom: 40 }}>
+        <View style={styles.floatingButtons}>
+          <TouchableOpacity
+            style={styles.presentButton}
+            onPress={() => handleMarkAllClasses("Present")}
+          >
+            <Text style={styles.buttonText}>Present for Class</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.absentButton}
+            onPress={() => handleMarkAllClasses("Absent")}
+          >
+            <Text style={styles.buttonText}>Absent for Class</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={[styles.tableContainer, { flex: 1, marginBottom: 40 }]}>
           <Table className="w-full">
             <TableBody>
-              <TableRow>
+              <TableRow style={styles.tableRow}>
                 <TableData>Total Classes Scheduled:</TableData>
                 <TableData>{totalClasses}</TableData>
               </TableRow>
-              <TableRow>
+              <TableRow style={styles.tableRow}>
                 <TableData>Total Classes Attended:</TableData>
                 <TableData>{presentCount}</TableData>
               </TableRow>
-              <TableRow>
-                <TableData>Absent Left</TableData>
+              <TableRow style={styles.tableRow}>
+                <TableData>Absent Left:</TableData>
                 <TableData>{Math.max(allowableAbsences, 0)}</TableData>
               </TableRow>
-              <TableRow>
+              <TableRow style={styles.tableRow}>
                 <TableData>Attendance Percentage:</TableData>
                 <TableData>{currentAttendancePercentage.toFixed(2)}%</TableData>
               </TableRow>
-              <TableRow>
+              <TableRow style={styles.tableRow}>
                 <TableData>Last Updated:</TableData>
                 <TableData>{getLastUpdatedForCourse()}</TableData>
               </TableRow>
@@ -447,24 +488,7 @@ const AttendanceScreen = ({ navigation }) => {
           </Table>
         </View>
 
-        {selectedDate && ( // Conditionally render buttons only if a date is selected
-          <View style={styles.floatingButtons}>
-            <TouchableOpacity
-              style={styles.presentButton}
-              onPress={() => handleMarkAllClasses("Present")}
-            >
-              <Text style={styles.buttonText}>Present for Class</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.absentButton}
-              onPress={() => handleMarkAllClasses("Absent")}
-            >
-              <Text style={styles.buttonText}>Absent for Class</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        <View style={styles.buttonContainer}>
+        <View style={[styles.buttonContainer, styles.resetButton]}>
           <Button
             title="Reset Attendance"
             onPress={handleResetAttendance}
@@ -485,7 +509,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "bold",
     color: "#333", // Dark text for readability
     marginBottom: 10,
@@ -544,6 +568,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 20,
     paddingHorizontal: 10,
+    marginBottom: 20,
   },
   presentButton: {
     backgroundColor: "#32cd32", // Green for present
@@ -576,10 +601,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff", // White background for the table
     overflow: "hidden",
     marginBottom: 40,
-    elevation: 5, // Adding depth to the table
+    elevation: 5,
   },
   tableRow: {
-    paddingVertical: 12,
+    paddingVertical: 2,
     borderBottomWidth: 1,
     borderBottomColor: "#ddd", // Light border for table rows
     flexDirection: "row",
@@ -595,7 +620,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 0,
     elevation: 3, // Adding depth to the reset button
   },
 });
