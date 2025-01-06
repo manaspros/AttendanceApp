@@ -58,16 +58,16 @@ Your app should now be running on the default browser or emulator.
 
 We welcome contributions from everyone to improve the app. Whether you're fixing a bug, adding a new feature, or improving documentation, your help is appreciated! Follow the steps below to contribute:
 
-### Steps to Contribute
+### Steps to Contribute to feature
 
 1. **Fork the Repository**: Click the "Fork" button at the top-right of the repository to create a copy of the repo in your GitHub account.
-2. **Create a Branch**: Create a new branch for the feature/fix you're working on:
+2. **Create a Branch**: Create a new branch for the feature you're working on:
    
    ```bash
    git checkout -b feature/your-feature-name
    ```
    
-3. **Make Changes**: Implement your feature or fix the bug in the code.
+3. **Make Changes**: Implement your feature the bug in the code.
 4. **Test Your Changes**: Run the app and test the changes locally to make sure everything works.
 5. **Commit Your Changes**: Once you're satisfied with the changes, commit them to your branch:
 
@@ -83,6 +83,7 @@ We welcome contributions from everyone to improve the app. Whether you're fixing
    ```
 
 7. **Create a Pull Request**: Go to the original repository and create a pull request (PR) from your forked repo to the main repository. Provide a clear description of what your PR does.
+
 
 
 ### Steps to Contribute to Issues
