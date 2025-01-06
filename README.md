@@ -18,7 +18,7 @@ Follow the steps below to get started with the project locally:
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/yourusername/attendance-app.git
+git clone https://github.com/manaspros/AttendanceApp
 ```
 
 ### 2. Install Dependencies
@@ -26,7 +26,7 @@ git clone https://github.com/yourusername/attendance-app.git
 Navigate to the project directory and install the required dependencies:
 
 ```bash
-cd attendance-app
+cd AttendanceApp
 npm install
 ```
 
