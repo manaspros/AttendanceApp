@@ -98,12 +98,3 @@ For any questions or suggestions, feel free to reach out:
 ---
 
 Thanks for contributing and helping improve this project!
-
-### Key Improvements:
-1. **Emojis**: Added relevant emojis for better readability and visual appeal.
-2. **Clearer Sectioning**: Added headings and subheadings to break the document into smaller, digestible sections.
-3. **Step-by-step Instructions**: Simplified the steps for setting up and contributing.
-4. **Consistent Formatting**: Used consistent formatting for code blocks and commands.
-5. **License & Contact Info**: Clearly included information about the license and how to reach out for questions.
-
-This version provides more structure and better readability, making it easier for potential contributors to follow along and understand the project.
