@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useCourseContext } from "../store/context/course-context";
-import { saveData, getData } from "../utils/storage"; // Import saveData and getData
+import { saveData, getData } from "../utils/storage";
 import {
   Button,
   ButtonText,
@@ -14,9 +14,8 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const HomeScreen = ({ navigation }) => {
   const { selectedCourses, selectCategory } = useCourseContext();
-  const [degree, setDegree] = useState(null); // New state to store the selected degree
+  const [degree, setDegree] = useState(null);
 
-  // Load the selected degree from AsyncStorage when the component mounts
   useEffect(() => {
     const loadDegree = async () => {
       const storedDegree = await getData("selectedDegree");
@@ -25,14 +24,10 @@ const HomeScreen = ({ navigation }) => {
     loadDegree();
   }, []);
 
-  // Handle course category selection
   const handleSelectCategory = async (category) => {
-    selectCategory(category); // Update context
-    setDegree(category); // Update local state
-
-    // Save the selected degree to AsyncStorage
+    selectCategory(category);
+    setDegree(category);
     await saveData("selectedDegree", category);
-
     navigation.navigate("MarkAttendance");
   };
 
@@ -45,63 +40,66 @@ const HomeScreen = ({ navigation }) => {
   }
 
   return (
-    <LinearGradient
-      colors={["#3E4A89", "#1C1F33"]} // Deep blue gradient
-      style={styles.gradient}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>Select Your Degree</Text>
+    <LinearGradient colors={["#3E4A89", "#1C1F33"]} style={styles.gradient}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Select Your Degree</Text>
 
-        {/* Buttons for selecting Degree */}
-        <View style={styles.degreeButtonContainer}>
-          <Button
-            size="md"
-            variant="outline"
-            action="primary"
-            onPress={() => handleSelectCategory("CSE")}
-            style={styles.button}
-          >
-            <ButtonText>CSE</ButtonText>
-          </Button>
-          <Button
-            size="md"
-            variant="outline"
-            action="primary"
-            onPress={() => handleSelectCategory("DSAI")}
-            style={styles.button}
-          >
-            <ButtonText>DSAI</ButtonText>
-          </Button>
-          <Button
-            size="md"
-            variant="outline"
-            action="primary"
-            onPress={() => handleSelectCategory("ECE")}
-            style={styles.button}
-          >
-            <ButtonText>ECE</ButtonText>
-          </Button>
-        </View>
-
-        {/* Display the selected degree */}
-        {degree && (
-          <Text style={styles.selectedDegree}>
-            {`Selected Degree: ${degree}`}
-          </Text>
-        )}
-
-        {/* Display the courses if selected */}
-        {selectedCourses.length > 0 && (
-          <View style={styles.courseCard}>
-            <Text style={styles.courseCardTitle}>Selected Courses:</Text>
-            {selectedCourses.map((course, index) => (
-              <Text key={index} style={styles.courseItem}>
-                {`• ${course}`}
-              </Text>
-            ))}
+          {/* Buttons for selecting Degree */}
+          <View style={styles.degreeButtonContainer}>
+            <View style={styles.buttonWrapper}>
+              <Button
+                size="md"
+                variant="outline"
+                action="primary"
+                onPress={() => handleSelectCategory("CSE")}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>CSE</Text>
+              </Button>
+            </View>
+            <View style={styles.buttonWrapper}>
+              <Button
+                size="md"
+                variant="outline"
+                action="primary"
+                onPress={() => handleSelectCategory("DSAI")}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>DSAI</Text>
+              </Button>
+            </View>
+            <View style={styles.buttonWrapper}>
+              <Button
+                size="md"
+                variant="outline"
+                action="primary"
+                onPress={() => handleSelectCategory("ECE")}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>ECE</Text>
+              </Button>
+            </View>
           </View>
-        )}
-      </View>
+
+          {degree && (
+            <Text style={styles.selectedDegree}>
+              {`Selected Degree: ${degree}`}
+            </Text>
+          )}
+
+          {selectedCourses.length > 0 && (
+            <View style={styles.courseCard}>
+              <Text style={styles.courseCardTitle}>Selected Courses:</Text>
+              {selectedCourses.map((course, index) => (
+                <Text key={index} style={styles.courseItem}>
+                  {`• ${course}`}
+                </Text>
+              ))}
+            </View>
+          )}
+        </View>
+      </ScrollView>
     </LinearGradient>
   );
 };
@@ -118,6 +116,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   title: {
     fontSize: 28,
     fontWeight: "bold",
@@ -131,21 +134,36 @@ const styles = StyleSheet.create({
     width: "100%",
     marginVertical: 20,
   },
+  buttonWrapper: {
+    flex: 1,
+    marginHorizontal: 5,
+    height: 50,
+    borderRadius: 20,
+    overflow: "hidden", // Ensures rounded corners look consistent
+  },
   button: {
     flex: 1,
-    marginHorizontal: 10,
-    backgroundColor: "#6C63FF",
-    borderWidth: 0,
-    borderRadius: 10,
-    paddingVertical: 2,
+    backgroundColor: "#6C63FF", // Vibrant purple button
+    paddingHorizontal: 20,
+    paddingVertical: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
     shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#FFFFFF", // White text for contrast
+    fontWeight: "600",
+    fontFamily: "AdventPro_700Bold",
   },
   selectedDegree: {
     fontSize: 20,
-    color: "#6C63FF",
+    color: "#FFD700", // Golden text color
     fontWeight: "bold",
     marginVertical: 20,
     textAlign: "center",

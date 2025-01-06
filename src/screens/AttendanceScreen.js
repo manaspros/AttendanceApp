@@ -147,19 +147,6 @@ const AttendanceScreen = ({ navigation }) => {
       !courseHolidays[course]?.includes(date.dateString)
     ) {
       setSelectedDate(date.dateString);
-
-      // Mark the selected date as blue
-      setMarkedDates((prev) => ({
-        ...prev,
-        [date.dateString]: {
-          customStyles: {
-            container: {
-              backgroundColor: "blue", // Blue for selected date
-            },
-            text: { color: "white", fontWeight: "bold" },
-          },
-        },
-      }));
     } else {
       Alert.alert("No classes scheduled or holiday on this day.");
     }
