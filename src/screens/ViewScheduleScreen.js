@@ -84,9 +84,10 @@ const ViewScheduleScreen = ({ route, navigation }) => {
         const dayName = daysOfWeek[date.getDay()];
 
         if (
-          (dayName === "Saturday" || dayName === "Sunday") &&
-          !holidayDates.includes(dateString)
+          (dayName === "Saturday" || dayName === "Sunday") ||
+          holidayDates.includes(dateString)
         ) {
+          result[dateString]=[]
           continue;
         }
 
@@ -154,10 +155,10 @@ const ViewScheduleScreen = ({ route, navigation }) => {
   );
 
   const renderEmptyDate = (dateString) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString + ((5.5*60*60)*1000));
     const dayOfWeek = date.getDay();
 
-    if (holidayDates.includes(dateString)) {
+    if (holidayDates.includes(date.toISOString().split("T")[0])) {
       return (
         <View style={styles.emptyDateContainer}>
           <Text style={styles.emptyDateText}>Holiday</Text>
@@ -169,12 +170,6 @@ const ViewScheduleScreen = ({ route, navigation }) => {
       return (
         <View style={styles.emptyDateContainer}>
           <Text style={styles.emptyDateText}>No class today</Text>
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.emptyDateContainer}>
-          <Text style={styles.emptyDateText}>No classes scheduled</Text>
         </View>
       );
     }
@@ -273,14 +268,26 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   emptyDateContainer: {
+    backgroundColor: "#f9f9f9",
+    marginVertical: 5,
+    marginHorizontal: 10,
+    borderRadius: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 2,
+    minHeight: 60,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
+    marginTop: 20
   },
   emptyDateText: {
     fontSize: 16,
-    color: "gray",
+    color: "red",
+    fontWeight: 500
   },
 });
 
