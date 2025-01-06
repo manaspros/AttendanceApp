@@ -475,11 +475,9 @@ const AttendanceScreen = ({ navigation }) => {
         </View>
 
         <View style={[styles.buttonContainer, styles.resetButton]}>
-          <Button
-            title="Reset Attendance"
-            onPress={handleResetAttendance}
-            color="red"
-          />
+          <TouchableOpacity onPress={handleResetAttendance}>
+            <Text>Reset Attendance</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -607,7 +605,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     marginTop: 0,
-    elevation: 3, // Adding depth to the reset button
+    elevation: 10, // Adding depth to the reset button
   },
 });
 

@@ -80,7 +80,7 @@ const courseSchedules = {
     endDate: "2025-05-21",
   },
   "3D Printing(CSE)": {
-    startDate: "2025-01-03",
+    startDate: "2025-01-02",
     Wednesday: { period: 2, time: "4:00 PM - 6:00 PM" },
     Friday: { period: 1, time: "12:00 PM - 1:00 PM" },
     endDate: "2025-05-21",
@@ -92,7 +92,7 @@ const courseSchedules = {
     endDate: "2025-05-21",
   },
   "Communication and Discourse Strategies(CSE)": {
-    startDate: "2025-01-03",
+    startDate: "2025-01-02",
     Monday: { period: 1, time: "10:00 AM - 11:00 AM" },
     Friday: { period: 2, time: "9:00 AM - 10:00 AM" },
     endDate: "2025-05-21",
@@ -104,7 +104,7 @@ const courseSchedules = {
     endDate: "2025-05-21",
   },
   "Quantam Mechanics(CSE)": {
-    startDate: "2025-01-03",
+    startDate: "2025-01-02",
     Friday: { period: 2, time: "4:00 PM - 6:00 PM" },
     Wednesday: { period: 1, time: "12:00 PM - 1:00 PM" },
     endDate: "2025-05-21",
@@ -115,7 +115,7 @@ const courseSchedules = {
     endDate: "2025-05-21",
   },
   "Signal and System(CSE) 1st Half": {
-    startDate: "2025-01-03",
+    startDate: "2025-01-02",
     Tuesday: { period: 2, time: "11:00 AM - 1:00 PM" },
     Wednesday: { period: 1, time: "11:00 AM - 12:00 PM" },
     Thursday: { period: 1, time: "5:00 PM - 6:00 PM" },
@@ -143,13 +143,13 @@ const courseSchedules = {
     endDate: "2025-05-21",
   },
   "Design &Prototyping(ECE)": {
-    startDate: "2025-01-03",
+    startDate: "2025-01-02",
     Wednesday: { period: 2, time: "4:00 PM - 6:00 PM" },
     Friday: { period: 1, time: "12:00 PM - 1:00 PM" },
     endDate: "2025-05-21",
   },
   "3D Printing(ECE)": {
-    startDate: "2025-01-03",
+    startDate: "2025-01-02",
     Tuesday: { period: 1, time: "12:00 PM - 1:00 PM" },
     Friday: { period: 2, time: "4:00 PM - 6:00 PM" },
     endDate: "2025-05-21",
@@ -161,13 +161,13 @@ const courseSchedules = {
     endDate: "2025-05-21",
   },
   "Communication and Discourse Strategies(ECE)": {
-    startDate: "2025-01-03",
+    startDate: "2025-01-02",
     Monday: { period: 2, time: "2:00 PM - 4:00 PM" },
     Friday: { period: 1, time: "11:00 AM - 12:00 PM" },
     endDate: "2025-05-21",
   },
   "Calculus(ECE)": {
-    startDate: "2025-01-03",
+    startDate: "2025-01-02",
     Friday: { period: 2, time: "4:00 PM - 6:00 PM" },
     Wednesday: { period: 1, time: "11:00 AM - 12:00 PM" },
     endDate: "2025-05-21",

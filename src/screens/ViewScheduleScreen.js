@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Agenda } from "react-native-calendars";
 import courseSchedules from "../store/course-schedule";
 
@@ -17,20 +17,17 @@ const holidayDates = [
   "2025-05-12",
 ];
 
-const ViewScheduleScreen = ({ route }) => {
-  const { selectedCourses = [] } = route.params || {}; // Fallback to empty array if undefined
+const ViewScheduleScreen = ({ route, navigation }) => {
+  const { selectedCourses = [] } = route.params || {};
   const [agendaItems, setAgendaItems] = useState({});
 
-  // Get today's date
   const today = new Date().toISOString().split("T")[0];
-
-  // Define start and end dates for the Agenda
   const startDate = new Date();
-  startDate.setDate(startDate.getDate() - 5); // 5 days before today
+  startDate.setDate(startDate.getDate() - 5);
   const formattedStartDate = startDate.toISOString().split("T")[0];
 
   const endDate = new Date();
-  endDate.setDate(endDate.getDate() + 7); // 7 days after today
+  endDate.setDate(endDate.getDate() + 7);
   const formattedEndDate = endDate.toISOString().split("T")[0];
 
   useEffect(() => {
@@ -43,7 +40,6 @@ const ViewScheduleScreen = ({ route }) => {
       );
       setAgendaItems(processedSchedule);
     } else {
-      // Initialize agenda items with empty arrays for all dates
       const emptyAgenda = {};
       for (
         let date = new Date(formattedStartDate);
@@ -87,7 +83,6 @@ const ViewScheduleScreen = ({ route }) => {
         const dateString = date.toISOString().split("T")[0];
         const dayName = daysOfWeek[date.getDay()];
 
-        // Exclude weekends unless they are holidays
         if (
           (dayName === "Saturday" || dayName === "Sunday") &&
           !holidayDates.includes(dateString)
@@ -118,7 +113,6 @@ const ViewScheduleScreen = ({ route }) => {
       }
     });
 
-    // Sort items for each date by parsedTime (earliest first)
     Object.keys(result).forEach((date) => {
       result[date].sort((a, b) => a.parsedTime - b.parsedTime);
     });
@@ -133,23 +127,30 @@ const ViewScheduleScreen = ({ route }) => {
       hours = parseInt(hours, 10);
       minutes = parseInt(minutes, 10);
 
-      // Convert to 24-hour format
       if (period.toUpperCase() === "PM" && hours !== 12) {
         hours += 12;
       } else if (period.toUpperCase() === "AM" && hours === 12) {
         hours = 0;
       }
 
-      return hours * 60 + minutes; // Return the time in minutes past midnight
+      return hours * 60 + minutes;
     }
     return 24 * 60;
   };
+  const [selectedDate, setSelectedDate] = useState(today);
+
+  const handleDayPress = (day) => {
+    setSelectedDate(day.dateString);
+  };
 
   const renderAgendaItem = (item, firstItem) => (
-    <View style={[styles.itemContainer, firstItem && { marginTop: 20 }]}>
+    <TouchableOpacity
+      style={[styles.itemContainer, firstItem && { marginTop: 20 }]}
+      onPress={() => navigation.navigate("Attendance", { course: item.name })}
+    >
       <Text style={styles.courseName}>{item.name}</Text>
       <Text style={styles.courseTime}>{item.time}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   const renderEmptyDate = (dateString) => {
@@ -178,14 +179,13 @@ const ViewScheduleScreen = ({ route }) => {
       );
     }
   };
-
   return (
     <View style={styles.container}>
       <Agenda
         items={agendaItems}
         renderItem={renderAgendaItem}
         renderEmptyDate={renderEmptyDate}
-        selected={today}
+        selected={selectedDate}
         minDate={formattedStartDate}
         maxDate={formattedEndDate}
         theme={{
@@ -195,7 +195,7 @@ const ViewScheduleScreen = ({ route }) => {
           agendaKnobColor: "blue",
         }}
         style={styles.agendaContainer}
-        hideKnob={true} // Add this line
+        hideKnob={true}
         markedDates={{
           ...Array.from({
             length:
@@ -231,6 +231,7 @@ const ViewScheduleScreen = ({ route }) => {
             return acc;
           }, {}),
         }}
+        onDayPress={handleDayPress} // Add this line
       />
     </View>
   );
@@ -243,6 +244,10 @@ const styles = StyleSheet.create({
   },
   agendaContainer: {
     minHeight: 300,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#e1e1e1",
+    elevation: 2,
   },
   itemContainer: {
     backgroundColor: "#f9f9f9",
