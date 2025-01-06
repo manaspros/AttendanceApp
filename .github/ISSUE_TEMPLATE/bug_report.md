@@ -2,8 +2,9 @@
 name: Bug Report
 about: Report a bug to help us improve the app.
 title: "[Bug] <Short Description of the Bug>"
-labels: bug
-assignees: ""
+labels: bug, enhancement
+assignees: ''
+
 ---
 
 **Description of the Bug:**
@@ -12,7 +13,7 @@ A clear and concise description of the bug. What is happening and how does it im
 **Steps to Reproduce:**
 
 1. List the steps to reproduce the issue.
-2. Include any details on conditions or configuration that may be relevant.
+2. Include any details on conditions or configuration that may be relevant .
 
 **Severity Check:**
 
