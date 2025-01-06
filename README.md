@@ -98,7 +98,6 @@ For any questions or suggestions, feel free to reach out:
 ---
 
 Thanks for contributing and helping improve this project!
-```
 
 ### Key Improvements:
 1. **Emojis**: Added relevant emojis for better readability and visual appeal.
