@@ -6,9 +6,8 @@ The IIIT Naya Raipur Attendance App is a simple mobile application built with **
 ## Features
 
 - 📚 **Mark Attendance**: Mark your attendance for selected courses with ease.
-- 📊 **Attendance Tracking**: View and track your attendance percentage for each course.
+- 📊 **Attendance Tracking**: View and track your attendance percentage for each course customised for each semester.
 - 🖥️ **Interactive UI**: A simple and user-friendly interface that makes attendance marking and viewing seamless.
-- 🔒 **Secure**: Authentication and secure data handling to ensure privacy.
 
 ## Setup Instructions
 
