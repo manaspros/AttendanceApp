@@ -3,11 +3,25 @@
 
 The IIIT Naya Raipur Attendance App is a simple mobile application built with **React Native** that allows students to easily mark their attendance for selected courses. The app offers a clean and interactive interface for managing attendance and provides real-time attendance percentage tracking.
 
-## Features
+### Features:
+- **Mark Attendance** 📝: Students can mark attendance for the courses they are enrolled in.
+- **View Attendance** 📊: Check the current attendance percentage for each course.
+- **Interactive UI** 🎨: The app has a clean, simple, and interactive UI that enhances usability.
+- **Course Management** 📚: Easily manage and track attendance for selected courses.
+- **Cross-Platform Support** 📱: Built with React Native, the app works on both Android and iOS devices.
 
-- 📚 **Mark Attendance**: Mark your attendance for selected courses with ease.
-- 📊 **Attendance Tracking**: View and track your attendance percentage for each course customised for each semester.
-- 🖥️ **Interactive UI**: A simple and user-friendly interface that makes attendance marking and viewing seamless.
+--- 
+
+### Purpose
+This app aims to automate and simplify the process of attendance marking, reducing manual work and helping students keep track of their attendance in real-time. It is especially useful for remote learning and maintaining up-to-date attendance records. 🚀
+
+---
+
+### Technologies Used:
+- **React Native** ⚛️: The app is built using React Native for cross-platform mobile development.
+- **Local Storage** 📥: For storing and retrieving attendance data.
+
+---
 
 ## Setup Instructions
 
@@ -78,7 +92,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 For any questions or suggestions, feel free to reach out:
 
-- [Your GitHub Profile](https://github.com/manaspros)
+- [Manas DSAI](https://github.com/manaspros)
 - Email: manas24102@iiitnr.edu.in
 
 ---
