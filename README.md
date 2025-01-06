@@ -84,6 +84,43 @@ We welcome contributions from everyone to improve the app. Whether you're fixing
 
 7. **Create a Pull Request**: Go to the original repository and create a pull request (PR) from your forked repo to the main repository. Provide a clear description of what your PR does.
 
+
+### Steps to Contribute to Issues
+
+1. **Find an Issue**: Browse the [Issues](https://github.com/manaspros/AttendanceApp/issues) section of the repository and choose one you'd like to work on. If you spot a bug not listed, feel free to create a new issue.
+
+2. **Comment on the Issue**: Let others know you're working on it by leaving a comment on the issue, e.g.,  
+   > "I’d like to work on this issue. Assign it to me, please!"
+
+3. **Fork the Repository**: Click the "Fork" button at the top-right of the repository to create a copy in your GitHub account.
+
+4. **Create a Branch**: Create a branch named after the issue number you're working on. For example:
+
+   ```bash
+   git checkout -b issue/#issue-number
+   ```
+
+5. **Make Changes**: Implement your fix or enhancement related to the issue.
+
+6. **Test Your Changes**: Run the app and ensure your changes resolve the issue without introducing new bugs.
+
+7. **Commit Your Changes**: Once satisfied, commit your changes with a descriptive message:
+
+   ```bash
+   git add .
+   git commit -m "Fix: Describe what issue you resolved (#issue-number)"
+   ```
+
+8. **Push the Changes**: Push your branch to your forked repository:
+
+   ```bash
+   git push origin issue/#issue-number
+   ```
+
+9. **Create a Pull Request**: Go to the original repository and create a pull request (PR) from your forked branch to the main repository. Reference the issue number in your PR description (e.g., `Closes #123`).
+
+By following these steps, you'll help improve the project while ensuring the community collaborates effectively! 🚀
+
 ## License
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.
