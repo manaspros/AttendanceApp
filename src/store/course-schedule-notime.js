@@ -40,11 +40,6 @@ const courseSchedules = {
     Thursday: 1,
     endDate: "2025-05-21",
   },
-  "Management of Wealth and Well Being": {
-    startDate: "2025-01-03",
-    Wednesday: 2,
-    endDate: "2025-05-21",
-  },
   "Signal and System 1st Half": {
     startDate: "2025-01-03",
     Monday: 2,
@@ -109,11 +104,6 @@ const courseSchedules = {
     Wednesday: 1,
     endDate: "2025-05-21",
   },
-  "Management of Wealth and Well Being (CSE)": {
-    startDate: "2025-01-03",
-    Tuesday: 2,
-    endDate: "2025-05-21",
-  },
   "Signal and System(CSE) 1st Half": {
     startDate: "2025-01-03",
     Tuesday: 2,
@@ -141,24 +131,24 @@ const courseSchedules = {
   "Introduction to IoT(ECE)": {
     startDate: "2025-01-03",
     Wednesday: 1,
-    Thursday: 2,
+    Thursday: 1,
     endDate: "2025-05-21",
   },
   "Design &Prototyping(ECE)": {
     startDate: "2025-01-03",
-    Wednesday: 2,
+    Wednesday: 1,
     Friday: 1,
     endDate: "2025-05-21",
   },
   "3D Printing(ECE)": {
     startDate: "2025-01-03",
     Tuesday: 1,
-    Friday: 2,
+    Friday: 1,
     endDate: "2025-05-21",
   },
   "Introduction to AI and ML(ECE)": {
     startDate: "2025-01-03",
-    Tuesday: 2,
+    Tuesday: 1,
     Thursday: 1,
     endDate: "2025-05-21",
   },
@@ -180,15 +170,10 @@ const courseSchedules = {
     Friday: 2,
     endDate: "2025-05-21",
   },
-  "Management of Wealth and Well Being (ECE)": {
-    startDate: "2025-01-03",
-    Monday: 2,
-    endDate: "2025-05-21",
-  },
   "Signal and System(ECE) 1st Half": {
     startDate: "2025-01-03",
-    Tuesday: 3,
-    Wednesday: 2,
+    Tuesday: 2,
+    Wednesday: 1,
     Thursday: 1,
     endDate: "2025-02-24",
   },
