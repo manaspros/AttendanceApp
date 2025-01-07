@@ -23,11 +23,11 @@ const ViewScheduleScreen = ({ route, navigation }) => {
 
   const today = new Date().toISOString().split("T")[0];
   const startDate = new Date();
-  startDate.setDate(startDate.getDate() - 5);
+  startDate.setDate(startDate.getDate() - startDate.getDay());
   const formattedStartDate = startDate.toISOString().split("T")[0];
 
   const endDate = new Date();
-  endDate.setDate(endDate.getDate() + 7);
+  endDate.setDate(endDate.getDate() + (6-endDate.getDay()));
   const formattedEndDate = endDate.toISOString().split("T")[0];
 
   useEffect(() => {
