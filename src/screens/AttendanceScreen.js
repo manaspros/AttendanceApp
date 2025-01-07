@@ -93,6 +93,7 @@ const AttendanceScreen = ({ navigation }) => {
       const dayOfWeek = getDayOfWeek(dateString);
 
       if (holidays.includes(dateString)) {
+        // Mark holidays as gray
         newMarkedDates[dateString] = {
           customStyles: {
             container: {
@@ -105,11 +106,16 @@ const AttendanceScreen = ({ navigation }) => {
         const classes = schedule[dayOfWeek];
         const attendanceForDate = attendanceData[dateString]?.[course] || {};
 
+        // Count statuses
         const absentCount = Object.values(attendanceForDate).filter(
           (status) => status === "Absent"
         ).length;
+        const skippedCount = Object.values(attendanceForDate).filter(
+          (status) => status === "Skip"
+        ).length;
 
         if (Object.keys(attendanceForDate).length === 0) {
+          // If no attendance is marked, set the date as orange (Pending)
           newMarkedDates[dateString] = {
             customStyles: {
               container: {
@@ -118,17 +124,32 @@ const AttendanceScreen = ({ navigation }) => {
               text: { color: "white", fontWeight: "bold" },
             },
           };
+        } else if (skippedCount > 0) {
+          // If any class is skipped, set the date as black
+          newMarkedDates[dateString] = {
+            customStyles: {
+              container: {
+                backgroundColor: "black",
+              },
+              text: { color: "white", fontWeight: "bold" },
+            },
+          };
         } else {
-          let backgroundColor = "green";
+          // Default logic for Present/Absent
+          let backgroundColor = "green"; // Default green for all classes attended
           if (classes === 1) {
             backgroundColor = "#90ee90"; // Light green for 1 class
           } else if (classes === 2) {
             backgroundColor = "#32cd32"; // Darker green for 2 classes
           }
+
+          // If any class is absent, mark the date as red
+          backgroundColor = absentCount > 0 ? "red" : backgroundColor;
+
           newMarkedDates[dateString] = {
             customStyles: {
               container: {
-                backgroundColor: absentCount > 0 ? "red" : backgroundColor,
+                backgroundColor,
               },
               text: { color: "white", fontWeight: "bold" },
             },
@@ -187,7 +208,12 @@ const AttendanceScreen = ({ navigation }) => {
       [selectedDate]: {
         customStyles: {
           container: {
-            backgroundColor: status === "Absent" ? "red" : "green", // Red or Green based on status
+            backgroundColor:
+              status === "Absent"
+                ? "red"
+                : status === "Skip"
+                ? "blue"
+                : "green", // Red for "Absent," Blue for "Skip," Green for "Present"
           },
           text: { color: "white", fontWeight: "bold" },
         },
@@ -238,8 +264,19 @@ const AttendanceScreen = ({ navigation }) => {
       return acc + Math.min(absentForDay, classesOnDay);
     }, 0);
 
+    const skipCount = Object.keys(currentAttendance).reduce((acc, date) => {
+      const dayOfWeek = getDayOfWeek(date);
+      const classesOnDay = courseSchedules[course]?.[dayOfWeek] || 0;
+      const skipForDay = Object.values(
+        currentAttendance[date]?.[course] || {}
+      ).filter((status) => status === "Skip").length;
+
+      return acc + Math.min(skipForDay, classesOnDay);
+    }, 0);
+
     const currentAttendancePercentage =
-      ((totalClasses - absentCount) / totalClasses) * 100;
+      ((totalClasses - absentCount - skipCount) / (totalClasses - skipCount)) *
+      100;
 
     // Store the attendance percentage with the course data
     currentAttendance[course] = currentAttendance[course] || {};
@@ -252,7 +289,6 @@ const AttendanceScreen = ({ navigation }) => {
 
     Alert.alert(`Marked ${status} for all classes on ${selectedDate}`);
   };
-
   const handleResetAttendance = async () => {
     Alert.alert(
       "Reset Attendance",
@@ -327,6 +363,7 @@ const AttendanceScreen = ({ navigation }) => {
     );
   };
 
+  // Updated calculation for present count, absent count, and skipped classes
   const presentCount = Object.keys(attendance).reduce((acc, date) => {
     const dayOfWeek = getDayOfWeek(date);
     const classesOnDay = courseSchedules[course]?.[dayOfWeek] || 0;
@@ -347,6 +384,15 @@ const AttendanceScreen = ({ navigation }) => {
     return acc + Math.min(absentForDay, classesOnDay);
   }, 0);
 
+  const skippedCount = Object.keys(attendance).reduce((acc, date) => {
+    const skippedForDay = Object.values(
+      attendance[date]?.[course] || {}
+    ).filter((status) => status === "Skip").length;
+
+    return acc + skippedForDay;
+  }, 0);
+
+  // Updated total classes calculation to exclude skipped classes
   const totalClasses = Object.entries(courseSchedules[course] || {}).reduce(
     (acc, [dayOfWeek, classes]) => {
       const { start, end } = getCourseDates(course);
@@ -375,10 +421,13 @@ const AttendanceScreen = ({ navigation }) => {
     0
   );
 
-  const minRequiredClasses = Math.ceil(totalClasses * 0.75);
-  const allowableAbsences = totalClasses - minRequiredClasses - absentCount;
+  // Adjust total classes by subtracting skipped classes
+  const adjustedTotalClasses = totalClasses - skippedCount;
+  const minRequiredClasses = Math.ceil(adjustedTotalClasses * 0.75);
+  const allowableAbsences =
+    adjustedTotalClasses - minRequiredClasses - absentCount;
   const currentAttendancePercentage =
-    ((totalClasses - absentCount) / totalClasses) * 100;
+    ((adjustedTotalClasses - absentCount) / adjustedTotalClasses) * 100;
 
   return (
     <ScrollView style={{ marginTop: 0, flex: 1 }}>
@@ -445,6 +494,12 @@ const AttendanceScreen = ({ navigation }) => {
           >
             <Text style={styles.buttonText}>Absent for Class</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.skipButton} // Apply skipButton style here
+            onPress={() => handleMarkAllClasses("Skip")}
+          >
+            <Text style={styles.buttonText}>Skip this Class</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={[styles.tableContainer, { flex: 1, marginBottom: 40 }]}>
@@ -452,7 +507,7 @@ const AttendanceScreen = ({ navigation }) => {
             <TableBody>
               <TableRow style={styles.tableRow}>
                 <TableData>Total Classes Scheduled:</TableData>
-                <TableData>{totalClasses}</TableData>
+                <TableData>{adjustedTotalClasses}</TableData>
               </TableRow>
               <TableRow style={styles.tableRow}>
                 <TableData>Total Classes Attended:</TableData>
@@ -487,7 +542,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f9f9f9", // Lighter background for better contrast
+    backgroundColor: "#f9f9f9",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     overflow: "hidden",
@@ -495,12 +550,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333", // Dark text for readability
+    color: "#333",
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 18,
-    color: "#777", // Softer color for subtitles
+    color: "#777",
     marginBottom: 20,
   },
   legendContainer: {
@@ -520,13 +575,13 @@ const styles = StyleSheet.create({
   oneClass: {
     width: 15,
     height: 15,
-    backgroundColor: "#90ee90", // Light Green
+    backgroundColor: "#90ee90",
     borderRadius: 5,
   },
   greenDark: {
     width: 15,
     height: 15,
-    backgroundColor: "#32cd32", // Dark Green
+    backgroundColor: "#32cd32",
     borderRadius: 5,
   },
   red: {
@@ -567,8 +622,19 @@ const styles = StyleSheet.create({
     backgroundColor: "red", // Red for absent
     paddingVertical: 12,
     borderRadius: 12,
+    marginRight: 10,
     flex: 1,
     alignItems: "center",
+    elevation: 3, // Slight shadow for depth
+  },
+  skipButton: {
+    backgroundColor: "black", // Black for skip
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderRadius: 12,
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center", // Centering the text
     elevation: 3, // Slight shadow for depth
   },
   buttonText: {
@@ -582,7 +648,7 @@ const styles = StyleSheet.create({
   },
   tableContainer: {
     borderRadius: 15,
-    backgroundColor: "#ffffff", // White background for the table
+    backgroundColor: "#ffffff",
     overflow: "hidden",
     marginBottom: 40,
     elevation: 5,
@@ -590,7 +656,7 @@ const styles = StyleSheet.create({
   tableRow: {
     paddingVertical: 2,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd", // Light border for table rows
+    borderBottomColor: "#ddd",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
