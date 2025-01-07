@@ -40,11 +40,6 @@ const courseSchedules = {
     Thursday: { period: 1, time: "11:00 AM - 12:00 PM" },
     endDate: "2025-05-21",
   },
-  "Management of Wealth and Well Being": {
-    startDate: "2025-01-03",
-    Wednesday: { period: 2, time: "4:00 PM - 6:00 PM" },
-    endDate: "2025-05-21",
-  },
   "Signal and System 1st Half": {
     startDate: "2025-01-03",
     Monday: { period: 2, time: "11:00 AM - 1:00 PM" },
@@ -109,11 +104,6 @@ const courseSchedules = {
     Wednesday: { period: 1, time: "12:00 PM - 1:00 PM" },
     endDate: "2025-05-21",
   },
-  "Management of Wealth and Well Being (CSE)": {
-    startDate: "2025-01-03",
-    Tuesday: { period: 2, time: "2:00 PM - 4:00 PM" },
-    endDate: "2025-05-21",
-  },
   "Signal and System(CSE) 1st Half": {
     startDate: "2025-01-02",
     Tuesday: { period: 2, time: "11:00 AM - 1:00 PM" },
@@ -176,11 +166,6 @@ const courseSchedules = {
     startDate: "2025-01-03",
     Monday: { period: 1, time: "10:00 AM - 11:00 AM" },
     Friday: { period: 2, time: "9:00 AM - 11:00 AM" },
-    endDate: "2025-05-21",
-  },
-  "Management of Wealth and Well Being (ECE)": {
-    startDate: "2025-01-03",
-    Monday: { period: 2, time: "4:00 PM - 6:00 PM" },
     endDate: "2025-05-21",
   },
   "Signal and System(ECE) 1st Half": {
