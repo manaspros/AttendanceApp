@@ -161,74 +161,17 @@ const AttendanceScreen = ({ navigation }) => {
     setMarkedDates(newMarkedDates);
   };
 
-  const [previousDateColor, setPreviousDateColor] = useState({});
-
   const handleDateSelect = (date) => {
-    const { dateString } = date;
-    const dayOfWeek = getDayOfWeek(dateString);
-
+    const dayOfWeek = getDayOfWeek(date.dateString);
     if (
       courseSchedules[course]?.[dayOfWeek] &&
-      !courseHolidays[course]?.includes(dateString)
+      !courseHolidays[course]?.includes(date.dateString)
     ) {
-      setMarkedDates((prev) => {
-        const updatedDates = { ...prev };
-
-        // If there's a previously selected date
-        if (selectedDate) {
-          // Dynamically fetch the current color of the previously selected date
-          const currentColor =
-            prev[selectedDate]?.customStyles?.container?.backgroundColor ||
-            "white";
-
-          // Restore the previous date's color
-          updatedDates[selectedDate] = {
-            ...updatedDates[selectedDate],
-            customStyles: {
-              ...updatedDates[selectedDate]?.customStyles,
-              container: {
-                backgroundColor: currentColor, // Use the dynamically fetched color
-              },
-            },
-          };
-
-          // Store this color in previousDateColor for future reference
-          setPreviousDateColor((prevColors) => ({
-            ...prevColors,
-            [selectedDate]: currentColor,
-          }));
-        }
-
-        // Store the current color of the new date
-        const newDateCurrentColor =
-          prev[dateString]?.customStyles?.container?.backgroundColor || "white";
-
-        setPreviousDateColor((prevColors) => ({
-          ...prevColors,
-          [dateString]: newDateCurrentColor,
-        }));
-
-        // Highlight the new date with blue
-        updatedDates[dateString] = {
-          ...updatedDates[dateString],
-          customStyles: {
-            ...updatedDates[dateString]?.customStyles,
-            container: {
-              backgroundColor: "blue",
-            },
-          },
-        };
-
-        return updatedDates;
-      });
-
-      // Update the selected date state
-      setSelectedDate(dateString);
+      setSelectedDate(date.dateString);
     } else {
-      Alert.alert("No classes scheduled or holiday on this day.");
+      Alert.alert("No classes scheduled or holiday on this day. ");
     }
   };
-
   const handleMarkAllClasses = async (status) => {
     if (!selectedDate) {
       Alert.alert("Please select a valid date.");
