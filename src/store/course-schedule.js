@@ -2,24 +2,24 @@ const courseSchedules = {
   "Introduction to IoT": {
     startDate: "2025-01-03",
     Thursday: { period: 1, time: "12:00 PM - 1:00 PM" },
-    Friday: { period: 2, time: "9:00 AM - 11:00 AM" },
+    Friday: { period: 1, time: "9:00 AM - 11:00 AM" },
     endDate: "2025-05-21",
   },
   "Design &Prototyping": {
     startDate: "2025-01-02",
     Wednesday: { period: 1, time: "10:00 AM - 11:00 AM" },
-    Thursday: { period: 2, time: "9:00 AM - 11:00 AM" },
+    Thursday: { period: 1, time: "9:00 AM - 11:00 AM" },
     endDate: "2025-05-21",
   },
   "3D Printing": {
     startDate: "2025-01-03",
-    Monday: { period: 2, time: "4:00 PM - 6:00 PM" },
+    Monday: { period: 1, time: "4:00 PM - 6:00 PM" },
     Wednesday: { period: 1, time: "12:00 PM - 1:00 PM" },
     endDate: "2025-05-21",
   },
   "Introduction to AI and ML": {
     startDate: "2025-01-03",
-    Monday: { period: 3, time: "2:00 PM - 4:00 PM \n 10:00 AM - 11:00 AM" },
+    Monday: { period: 2, time: "2:00 PM - 4:00 PM \n 10:00 AM - 11:00 AM" },
     endDate: "2025-05-21",
   },
   "Communication and Discourse Strategies": {
@@ -44,7 +44,7 @@ const courseSchedules = {
     startDate: "2025-01-03",
     Monday: { period: 2, time: "11:00 AM - 1:00 PM" },
     Wednesday: { period: 1, time: "9:00 AM - 10:00 AM" },
-    Thursday: { period: 2, time: "2:00 PM - 4:00 PM" },
+    Thursday: { period: 1, time: "2:00 PM - 4:00 PM" },
     Friday: { period: 1, time: "11:00 AM - 12:00 PM" },
     endDate: "2025-02-27",
   },
@@ -115,7 +115,9 @@ const courseSchedules = {
   "Optimization Techniques(CSE) 1st Half": {
     startDate: "2025-01-03",
     Monday: { period: 1, time: "3:00 PM - 4:00 PM" },
-    Wednesday: { period: 2, time: "9:00 AM - 11:00 AM" },
+    Tuesday: { period: 2, time: "2:00 PM - 4:00 PM" },
+    Wednesday: { period: 2, time: "2:00 PM - 4:00 PM" },
+    Thursday: { period: 1, time: "11:00 AM - 12:00 PM" },
     endDate: "2025-02-27",
   },
   "Object Oriented Programming(CSE) 2nd Half": {

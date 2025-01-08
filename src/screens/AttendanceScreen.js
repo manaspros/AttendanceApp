@@ -161,17 +161,60 @@ const AttendanceScreen = ({ navigation }) => {
     setMarkedDates(newMarkedDates);
   };
 
+  const [previousDateColor, setPreviousDateColor] = useState({});
+
   const handleDateSelect = (date) => {
-    const dayOfWeek = getDayOfWeek(date.dateString);
+    const { dateString } = date;
+    const dayOfWeek = getDayOfWeek(dateString);
+
     if (
       courseSchedules[course]?.[dayOfWeek] &&
-      !courseHolidays[course]?.includes(date.dateString)
+      !courseHolidays[course]?.includes(dateString)
     ) {
-      setSelectedDate(date.dateString);
+      // Update the previous date color
+      if (selectedDate) {
+        setMarkedDates((prev) => ({
+          ...prev,
+          [selectedDate]: {
+            ...prev[selectedDate],
+            customStyles: {
+              ...prev[selectedDate]?.customStyles,
+              container: {
+                backgroundColor: previousDateColor[selectedDate] || "white",
+              },
+            },
+          },
+        }));
+      }
+
+      setPreviousDateColor((prev) => ({
+        ...prev,
+        [dateString]:
+          markedDates[dateString]?.customStyles?.container?.backgroundColor ||
+          "white",
+      }));
+
+      // Change the new date color to blue
+      setMarkedDates((prev) => ({
+        ...prev,
+        [dateString]: {
+          ...prev[dateString],
+          customStyles: {
+            ...prev[dateString]?.customStyles,
+            container: {
+              backgroundColor: "blue",
+            },
+          },
+        },
+      }));
+
+      // Set the newly selected date
+      setSelectedDate(dateString);
     } else {
       Alert.alert("No classes scheduled or holiday on this day.");
     }
   };
+
   const handleMarkAllClasses = async (status) => {
     if (!selectedDate) {
       Alert.alert("Please select a valid date.");
@@ -479,6 +522,9 @@ const AttendanceScreen = ({ navigation }) => {
           <Text style={styles.legendItem}>
             <View style={styles.gray} /> Holiday
           </Text>
+          <Text style={styles.legendItem}>
+            <View style={styles.black} /> Skipped
+          </Text>
         </View>
 
         <View style={styles.floatingButtons}>
@@ -570,7 +616,7 @@ const styles = StyleSheet.create({
   legendItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 2,
+    marginBottom: 0.5,
   },
   oneClass: {
     width: 15,
@@ -600,6 +646,12 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
     backgroundColor: "gray",
+    borderRadius: 5,
+  },
+  black: {
+    width: 15,
+    height: 15,
+    backgroundColor: "black",
     borderRadius: 5,
   },
   floatingButtons: {
