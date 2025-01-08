@@ -171,44 +171,58 @@ const AttendanceScreen = ({ navigation }) => {
       courseSchedules[course]?.[dayOfWeek] &&
       !courseHolidays[course]?.includes(dateString)
     ) {
-      // Update the previous date color
-      if (selectedDate) {
-        setMarkedDates((prev) => ({
-          ...prev,
-          [selectedDate]: {
-            ...prev[selectedDate],
+      setMarkedDates((prev) => {
+        const updatedDates = { ...prev };
+
+        // If there's a previously selected date
+        if (selectedDate) {
+          // Dynamically fetch the current color of the previously selected date
+          const currentColor =
+            prev[selectedDate]?.customStyles?.container?.backgroundColor ||
+            "white";
+
+          // Restore the previous date's color
+          updatedDates[selectedDate] = {
+            ...updatedDates[selectedDate],
             customStyles: {
-              ...prev[selectedDate]?.customStyles,
+              ...updatedDates[selectedDate]?.customStyles,
               container: {
-                backgroundColor: previousDateColor[selectedDate] || "white",
+                backgroundColor: currentColor, // Use the dynamically fetched color
               },
             },
-          },
+          };
+
+          // Store this color in previousDateColor for future reference
+          setPreviousDateColor((prevColors) => ({
+            ...prevColors,
+            [selectedDate]: currentColor,
+          }));
+        }
+
+        // Store the current color of the new date
+        const newDateCurrentColor =
+          prev[dateString]?.customStyles?.container?.backgroundColor || "white";
+
+        setPreviousDateColor((prevColors) => ({
+          ...prevColors,
+          [dateString]: newDateCurrentColor,
         }));
-      }
 
-      setPreviousDateColor((prev) => ({
-        ...prev,
-        [dateString]:
-          markedDates[dateString]?.customStyles?.container?.backgroundColor ||
-          "white",
-      }));
-
-      // Change the new date color to blue
-      setMarkedDates((prev) => ({
-        ...prev,
-        [dateString]: {
-          ...prev[dateString],
+        // Highlight the new date with blue
+        updatedDates[dateString] = {
+          ...updatedDates[dateString],
           customStyles: {
-            ...prev[dateString]?.customStyles,
+            ...updatedDates[dateString]?.customStyles,
             container: {
               backgroundColor: "blue",
             },
           },
-        },
-      }));
+        };
 
-      // Set the newly selected date
+        return updatedDates;
+      });
+
+      // Update the selected date state
       setSelectedDate(dateString);
     } else {
       Alert.alert("No classes scheduled or holiday on this day.");
